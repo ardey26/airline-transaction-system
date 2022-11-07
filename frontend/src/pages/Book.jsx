@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DatePicker from "react-datepicker";
 import { useSelector, useDispatch } from "react-redux";
-import { MdDateRange } from "react-icons/md";
 import Spinner from "../components/Spinner";
 import { getGoals, reset } from "../features/goals/goalSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { createFlight } from "../features/flights/flightSlice";
+import { OneRound } from "../components/Book/OneRound";
+import { Origin } from "../components/Book/Origin";
+import { Class } from "../components/Book/Class";
+import { Destination } from "../components/Book/Destination";
+import { Passenger } from "../components/Book/Passenger";
+import Calendar from "../components/Book/Calendar";
+import CalendarRange from "../components/Book/CalendarRange";
+import Submit from "../components/Book/Submit";
 
 export const Book = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -27,9 +33,6 @@ export const Book = () => {
     departure: startDate,
     arrival: "",
   });
-
-  const [dateRange, setDateRange] = useState([null, null]);
-  const [beginDate, endDate] = dateRange;
 
   const { user } = useSelector((state) => state.auth);
   const { goals, isLoading, isError, message } = useSelector(
@@ -58,6 +61,15 @@ export const Book = () => {
 
   useEffect(() => {
     console.log(toggle);
+    setData({
+      destination: "",
+      origin: "",
+      class: "Economy",
+      num: 0,
+      departure: startDate,
+      arrival: "",
+    });
+    console.log(data);
   }, [toggle]);
 
   if (isLoading) {
@@ -122,117 +134,20 @@ export const Book = () => {
         <div className="card py-3" style={{ height: "h-100" }}>
           <div className="card-body">
             <form class="row g-3" onSubmit={handleSubmit}>
-              <div class="col-md-6">
-                <input
-                  type="radio"
-                  class="btn-check"
-                  name="options-outlined"
-                  id="oneWay"
-                  checked={toggle.oneway}
-                />
-                <label
-                  class="btn btn-outline-primary btn-block btn-lg"
-                  for="success-outlined"
-                  onClick={() => setToggle({ oneway: true, roundtrip: false })}
-                >
-                  ONE WAY
-                </label>
-              </div>
+              <OneRound toggle={toggle} setToggle={setToggle} />
+              <Origin
+                handleOriginChange={handleOriginChange}
+                countries={countries}
+              />
+              <Class handleClassChange={handleClassChange} classes={classes} />
+              <Destination
+                handleDestinationChange={handleDestinationChange}
+                countries={countries}
+              />
+              <Passenger handleNumChange={handleNumChange} num={num} />
+              <CalendarRange setData={setData} data={data} />
 
-              <div class="col-md-6">
-                <input
-                  type="radio"
-                  class="btn-check"
-                  name="options-outlined"
-                  id="oneWay"
-                  checked={toggle.roundtrip}
-                />
-                <label
-                  class="btn btn-outline-primary btn-block btn-lg"
-                  for="danger-outlined"
-                  onClick={() => setToggle({ oneway: false, roundtrip: true })}
-                >
-                  ROUND TRIP
-                </label>
-              </div>
-
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  FROM
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleOriginChange}
-                >
-                  <option selected>Choose...</option>
-                  {countries.map((country) => (
-                    <option value={country.value}> {country.label} </option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  CLASS
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleClassChange}
-                >
-                  <option selected>Choose...</option>
-                  {classes.map((item) => (
-                    <option value={item.value}>{item.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  TO
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleDestinationChange}
-                >
-                  <option selected>Choose...</option>
-                  {countries.map((country) => (
-                    <option value={country.value}>{country.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  PASSENGER
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleNumChange}
-                >
-                  <option selected>Choose...</option>
-
-                  {num.map((i) => (
-                    <option value={i}> {i} </option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                TRAVEL DATES: <MdDateRange size={20} />{" "}
-                <DatePicker
-                  selectsRange={true}
-                  startDate={beginDate}
-                  endDate={endDate}
-                  withPortal
-                  minDate={new Date()}
-                  onChange={(date) => setDateRange(date)}
-                />
-              </div>
-              <div class="col-md-6">
-                <button type="submit" class="btn btn-outline-primary mt-3">
-                  SEARCH FLIGHT
-                </button>
-              </div>
+              <Submit />
             </form>
           </div>
         </div>
@@ -244,115 +159,22 @@ export const Book = () => {
         <div className="card py-3" style={{ height: "h-100" }}>
           <div className="card-body">
             <form class="row g-3" onSubmit={handleSubmit}>
-              <div class="col-md-6">
-                <input
-                  type="radio"
-                  class="btn-check"
-                  name="options-outlined"
-                  id="oneWay"
-                  checked={toggle.oneway}
-                />
-                <label
-                  class="btn btn-outline-primary btn-block btn-lg"
-                  for="success-outlined"
-                  onClick={() => setToggle({ oneway: true, roundtrip: false })}
-                >
-                  ONE WAY
-                </label>
-              </div>
-
-              <div class="col-md-6">
-                <input
-                  type="radio"
-                  class="btn-check"
-                  name="options-outlined"
-                  id="oneWay"
-                  checked={toggle.roundtrip}
-                />
-                <label
-                  class="btn btn-outline-primary btn-block btn-lg"
-                  for="danger-outlined"
-                  onClick={() => setToggle({ oneway: false, roundtrip: true })}
-                >
-                  ROUND TRIP
-                </label>
-              </div>
-
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  FROM
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleDestinationChange}
-                >
-                  <option selected>Choose...</option>
-                  {countries.map((country) => (
-                    <option value={country.value}> {country.label} </option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  CLASS
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleClassChange}
-                >
-                  <option selected>Choose...</option>
-                  {classes.map((item) => (
-                    <option value={item.value}>{item.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  TO
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleOriginChange}
-                >
-                  <option selected>Choose...</option>
-                  {countries.map((country) => (
-                    <option value={country.value}> {country.label} </option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="inputState" class="form-label">
-                  PASSENGER
-                </label>
-                <select
-                  id="inputState"
-                  class="form-select form-control-lg"
-                  onChange={handleNumChange}
-                >
-                  <option selected>Choose...</option>
-
-                  {num.map((i) => (
-                    <option value={i}> {i} </option>
-                  ))}
-                </select>
-              </div>
-              <div class="col-md-6">
-                TRAVEL DATE: <MdDateRange size={20} />{" "}
-                <DatePicker
-                  withPortal
-                  minDate={new Date()}
-                  selected={data.departure}
-                  onChange={(date) => handleDepartureChange(date)}
-                />
-              </div>
-              <div class="col-md-6">
-                <button type="submit" class="btn btn-outline-primary mt-3">
-                  SEARCH FLIGHT
-                </button>
-              </div>
+              <OneRound toggle={toggle} setToggle={setToggle} />
+              <Origin
+                handleOriginChange={handleOriginChange}
+                countries={countries}
+              />
+              <Class handleClassChange={handleClassChange} classes={classes} />
+              <Destination
+                handleDestinationChange={handleDestinationChange}
+                countries={countries}
+              />
+              <Passenger handleNumChange={handleNumChange} num={num} />
+              <Calendar
+                handleDepartureChange={handleDepartureChange}
+                data={data}
+              />
+              <Submit />
             </form>
           </div>
         </div>
