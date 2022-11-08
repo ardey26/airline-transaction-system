@@ -11,7 +11,9 @@ export const Passenger = ({ handleNumChange, num }) => {
         class="form-select form-control-lg"
         onChange={handleNumChange}
       >
-        <option selected>Choose...</option>
+        <option selected disabled>
+          Choose...
+        </option>
 
         {num.map((i) => (
           <option value={i}> {i} </option>

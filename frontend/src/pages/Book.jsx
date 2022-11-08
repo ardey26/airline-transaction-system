@@ -15,12 +15,13 @@ import Calendar from "../components/Book/Calendar";
 import CalendarRange from "../components/Book/CalendarRange";
 import Submit from "../components/Book/Submit";
 
-export const Book = () => {
+export const Book = ({ getData, response }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [toggle, setToggle] = useState({
     oneway: true,
     roundtrip: false,
   });
+  let itinerary_type;
 
   const date = new Date().toJSON();
   const navigate = useNavigate();
@@ -28,8 +29,8 @@ export const Book = () => {
   const [data, setData] = useState({
     destination: "",
     origin: "",
-    class: "Economy",
-    num: 0,
+    class: "ECO",
+    num: "0",
     departure: startDate,
     arrival: "",
   });
@@ -38,6 +39,10 @@ export const Book = () => {
   const { goals, isLoading, isError, message } = useSelector(
     (state) => state.goals
   );
+
+  useEffect(() => {
+    console.log(response);
+  }, [response]);
 
   useEffect(() => {
     if (isError) {
@@ -64,11 +69,12 @@ export const Book = () => {
     setData({
       destination: "",
       origin: "",
-      class: "Economy",
+      class: "ECO",
       num: 0,
       departure: startDate,
       arrival: "",
     });
+
     console.log(data);
   }, [toggle]);
 
@@ -77,22 +83,23 @@ export const Book = () => {
   }
 
   let countries = [
-    { label: "Atlanta, United States of America (ATL)", value: "ATL" },
-    { label: "Beijing, China (PEK)", value: "PEK" },
-    { label: "London, United Kingdom (LHR)", value: "LHR" },
+    { label: "Bangkok, Thailand (BKK)", value: "BKK" },
+    { label: "Paris, France (PAR)", value: "PAR" },
+    { label: "London, United Kingdom (LCY)", value: "LCY" },
     { label: "Tokyo, Japan (HND)", value: "HND" },
-    { label: "Paris, France (CDG)", value: "CDG" },
-    { label: "Frankfurt, Germany (FRA)", value: "FRA" },
+    { label: "Singapore, Singapore (SIN)", value: "SIN" },
+    { label: "New York, USA (NYC)", value: "NYC" },
     { label: "Hongkong, Hongkong (HKG)", value: "HKG" },
-    { label: "Madrid, Spain (MAD)", value: "MAD" },
+    { label: "Kuala Lumpur, Malaysia (KUL)", value: "KUL" },
     { label: "Dubai, United Arab Emirates (DXB)", value: "DXB" },
     { label: "Manila, Philippines (MNL)", value: "MNL" },
   ];
 
   let classes = [
-    { label: "Economy Class", value: "Economy" },
-    { label: "Business Class", value: "Business" },
-    { label: "First Class", value: "First" },
+    { label: "Economy Class", value: "ECO" },
+    { label: "Business Class", value: "BUS" },
+    { label: "Premium Economy Class", value: "PEC" },
+    { label: "First Class", value: "FST" },
   ];
 
   let num = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
@@ -111,11 +118,11 @@ export const Book = () => {
   };
 
   const handleNumChange = (e) => {
-    setData({ ...data, num: parseInt(e.target.value) });
+    setData({ ...data, num: e.target.value });
   };
 
   const handleDepartureChange = (date) => {
-    setData({ ...data, departure: date });
+    setData({ ...data, departure: date.toISOString().split("T")[0] });
   };
 
   const handleArrivalChange = (e) => {
@@ -124,9 +131,10 @@ export const Book = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(createFlight({ data }));
+    getData(data);
+    // dispatch(createFlight({ data }));
     setData("");
+    navigate("/flights");
   };
   if (toggle.oneway === false && toggle.roundtrip === true) {
     return (
@@ -174,7 +182,11 @@ export const Book = () => {
                 handleDepartureChange={handleDepartureChange}
                 data={data}
               />
-              <Submit />
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-outline-primary mt-3">
+                  SEARCH FLIGHT
+                </button>
+              </div>
             </form>
           </div>
         </div>

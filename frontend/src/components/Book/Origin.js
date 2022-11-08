@@ -11,7 +11,9 @@ export const Origin = ({ handleOriginChange, countries }) => {
         class="form-select form-control-lg"
         onChange={handleOriginChange}
       >
-        <option selected>Choose...</option>
+        <option selected disabled>
+          Choose...
+        </option>
         {countries.map((country) => (
           <option value={country.value}> {country.label} </option>
         ))}

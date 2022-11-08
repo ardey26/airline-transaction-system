@@ -11,7 +11,9 @@ export const Class = ({ handleClassChange, classes }) => {
         class="form-select form-control-lg"
         onChange={handleClassChange}
       >
-        <option selected>Choose...</option>
+        <option selected disabled>
+          Choose...
+        </option>
         {classes.map((item) => (
           <option value={item.value}>{item.label}</option>
         ))}
