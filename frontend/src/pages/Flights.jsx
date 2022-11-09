@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Flights = ({ response }) => {
@@ -7,18 +7,15 @@ const Flights = ({ response }) => {
   const destination = response.destination;
   const departure = response.departure;
   const cabinClass = response.class;
-  let arrival;
+  const arrival = response.arrival;
 
-  const API_KEY =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiY2I1ODgyMjFlNTgzYjA3ZDE2NmE0YWFkNjM4OWNlNWZmYzIyZDc1OWE5NzliYzUwNDgxOTlkNTE1N2VlZjdhODI4MmUwZDk5OGU2ZjZhOTUiLCJpYXQiOjE2Njc3MTM2MTUsIm5iZiI6MTY2NzcxMzYxNSwiZXhwIjoxNjk5MjQ5NjE1LCJzdWIiOiIxNzEzNCIsInNjb3BlcyI6W119.bJBhcK-8IOwoyMPzehBzMBJzUbCsvPogRsiMBrE44xJ22hc2_mY0ybUlvoPMhsicw_BrQUbmiLmjdpy4Stdx0g";
-  const url = "http://app.goflightlabs.com/search-best-flights";
-  let x;
-
-  const axios = require("axios");
+  const API_KEY = "810ac4160fmsha95cd7639eeb9a5p19b13cjsna893908ac7a2";
+  const API_HOST = "priceline-com-provider.p.rapidapi.com";
+  const url = "https://priceline-com-provider.p.rapidapi.com/v1/flights/search";
 
   const options = {
     method: "GET",
-    url: "https://priceline-com-provider.p.rapidapi.com/v1/flights/search",
+    url: url,
     params: {
       itinerary_type: "ONE_WAY",
       class_type: cabinClass,
@@ -27,27 +24,60 @@ const Flights = ({ response }) => {
       location_departure: origin,
       sort_order: "PRICE",
       number_of_passengers: adults,
+      // date_departure_return: arrival === "" ? arrival : null,
     },
     headers: {
-      "X-RapidAPI-Key": "7d74c86230msh6c1a59b9ede9bdbp12e672jsn2a54b0d7e5d8",
-      "X-RapidAPI-Host": "priceline-com-provider.p.rapidapi.com",
+      "X-RapidAPI-Key": API_KEY,
+      "X-RapidAPI-Host": API_HOST,
     },
   };
 
-  axios
-    .request(options)
-    .then(function (response) {
-      const { filteredTripSummary } = response.data;
+  // const [results, setResults] = useState([]);
+  const results = axios.request(options).then((res) => {
+    console.log(res.data);
+  });
+  // axios
+  //   .request(options)
+  //   .then(function (response) {
+  //     const { filteredTripSummary } = response.data;
 
-      const origin = filteredTripSummary.airport[0].origin;
-      const destination = filteredTripSummary.airport[0].destination;
-      const price = filteredTripSummary.airport[0].lowestTotalFare.amount;
-      console.log(origin, destination, price);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
-  return <h1></h1>;
+  //     if (!filteredTripSummary) {
+  //       return console.log("NO RESULTS");
+  //     }
+
+  //     const num_of_results = 10;
+  //     const { airport, airline, carrier } = filteredTripSummary;
+
+  //     const max_results =
+  //       num_of_results > airline.length ? airline.length : num_of_results;
+
+  //     for (let i = 0; i < max_results; i++) {
+  //       let result_obj = {};
+  //       const { origin, destination } = airport[0];
+  //       const { amount, currency } = airline[i].lowestTotalFare;
+  //       const { code } = airline[i];
+
+  //       const carrier_code = carrier[i].code;
+
+  //       result_obj = {
+  //         origin: origin,
+  //         destination: destination,
+  //         amount: amount,
+  //         currency: currency,
+  //         airline_code: code,
+  //         carrier_code: carrier_code,
+  //       };
+
+  //       setResults([...results, result_obj]);
+  //     }
+
+  //     console.log(results);
+  //     console.log(filteredTripSummary);
+  //   })
+  //   .catch(function (error) {
+  //     console.error(error);
+  //   });
+  return <div> </div>;
 };
 
 export default Flights;

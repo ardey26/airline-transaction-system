@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 
 function App() {
   const [response, setResponse] = useState({
+    itinerary_type: "ONE_WAY",
     destination: "",
     origin: "",
     class: "Economy",

@@ -1,6 +1,12 @@
 import React from "react";
 
-export const OneRound = ({ toggle, setToggle }) => {
+export const OneRound = ({
+  toggle,
+  setToggle,
+  handleRoundTripChange,
+  handleOneWayChange,
+  data,
+}) => {
   return (
     <>
       <div class="col-md-6">
@@ -9,12 +15,12 @@ export const OneRound = ({ toggle, setToggle }) => {
           class="btn-check"
           name="options-outlined"
           id="oneWay"
-          checked={toggle.oneway}
+          checked={data.itinerary_type === "ONE_WAY"}
         />
         <label
           class="btn btn-outline-primary btn-block btn-lg"
           for="success-outlined"
-          onClick={() => setToggle({ oneway: true, roundtrip: false })}
+          onClick={handleOneWayChange}
         >
           ONE WAY
         </label>
@@ -25,12 +31,12 @@ export const OneRound = ({ toggle, setToggle }) => {
           class="btn-check"
           name="options-outlined"
           id="oneWay"
-          checked={toggle.roundtrip}
+          checked={data.itinerary_type === "ROUND_TRIP"}
         />
         <label
           class="btn btn-outline-primary btn-block btn-lg"
           for="danger-outlined"
-          onClick={() => setToggle({ oneway: false, roundtrip: true })}
+          onClick={handleRoundTripChange}
         >
           ROUND TRIP
         </label>

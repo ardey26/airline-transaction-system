@@ -5,7 +5,7 @@ import Spinner from "../components/Spinner";
 import { getGoals, reset } from "../features/goals/goalSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { createFlight } from "../features/flights/flightSlice";
+
 import { OneRound } from "../components/Book/OneRound";
 import { Origin } from "../components/Book/Origin";
 import { Class } from "../components/Book/Class";
@@ -16,17 +16,19 @@ import CalendarRange from "../components/Book/CalendarRange";
 import Submit from "../components/Book/Submit";
 
 export const Book = ({ getData, response }) => {
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
   const [toggle, setToggle] = useState({
     oneway: true,
     roundtrip: false,
   });
-  let itinerary_type;
 
   const date = new Date().toJSON();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [data, setData] = useState({
+    itinerary_type: "ONE_WAY",
     destination: "",
     origin: "",
     class: "ECO",
@@ -67,6 +69,8 @@ export const Book = ({ getData, response }) => {
   useEffect(() => {
     console.log(toggle);
     setData({
+      itinerary_type:
+        data.itinerary_type === "ONE_WAY" ? "ROUND_TRIP" : "ONE_WAY",
       destination: "",
       origin: "",
       class: "ECO",
@@ -125,8 +129,16 @@ export const Book = ({ getData, response }) => {
     setData({ ...data, departure: date.toISOString().split("T")[0] });
   };
 
-  const handleArrivalChange = (e) => {
-    setData({ ...data, arrival: e.target.value });
+  const handleArrivalChange = (date) => {
+    setData({ ...data, arrival: date.toISOString().split("T")[0] });
+  };
+
+  const handleOneWayChange = (e) => {
+    setData({ ...data, itinerary_type: "ONE_WAY", arrival: "" });
+  };
+
+  const handleRoundTripChange = (e) => {
+    setData({ ...data, itinerary_type: "ROUND_TRIP" });
   };
 
   const handleSubmit = (e) => {
@@ -136,61 +148,41 @@ export const Book = ({ getData, response }) => {
     setData("");
     navigate("/flights");
   };
-  if (toggle.oneway === false && toggle.roundtrip === true) {
-    return (
-      <div>
-        <div className="card py-3" style={{ height: "h-100" }}>
-          <div className="card-body">
-            <form class="row g-3" onSubmit={handleSubmit}>
-              <OneRound toggle={toggle} setToggle={setToggle} />
-              <Origin
-                handleOriginChange={handleOriginChange}
-                countries={countries}
-              />
-              <Class handleClassChange={handleClassChange} classes={classes} />
-              <Destination
-                handleDestinationChange={handleDestinationChange}
-                countries={countries}
-              />
-              <Passenger handleNumChange={handleNumChange} num={num} />
-              <CalendarRange setData={setData} data={data} />
-
-              <Submit />
-            </form>
-          </div>
+  return (
+    <div>
+      <div className="card py-3" style={{ height: "h-100" }}>
+        <div className="card-body">
+          <form class="row g-3" onSubmit={handleSubmit}>
+            <OneRound
+              toggle={toggle}
+              setToggle={setToggle}
+              handleOneWayChange={handleOneWayChange}
+              handleRoundTripChange={handleRoundTripChange}
+              data={data}
+            />
+            <Origin
+              handleOriginChange={handleOriginChange}
+              countries={countries}
+            />
+            <Class handleClassChange={handleClassChange} classes={classes} />
+            <Destination
+              handleDestinationChange={handleDestinationChange}
+              countries={countries}
+            />
+            <Passenger handleNumChange={handleNumChange} num={num} />
+            <Calendar
+              handleDepartureChange={handleDepartureChange}
+              handleArrivalChange={handleArrivalChange}
+              data={data}
+            />
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-outline-primary mt-3">
+                SEARCH FLIGHT
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    );
-  } else {
-    return (
-      <div>
-        <div className="card py-3" style={{ height: "h-100" }}>
-          <div className="card-body">
-            <form class="row g-3" onSubmit={handleSubmit}>
-              <OneRound toggle={toggle} setToggle={setToggle} />
-              <Origin
-                handleOriginChange={handleOriginChange}
-                countries={countries}
-              />
-              <Class handleClassChange={handleClassChange} classes={classes} />
-              <Destination
-                handleDestinationChange={handleDestinationChange}
-                countries={countries}
-              />
-              <Passenger handleNumChange={handleNumChange} num={num} />
-              <Calendar
-                handleDepartureChange={handleDepartureChange}
-                data={data}
-              />
-              <div class="col-md-6">
-                <button type="submit" class="btn btn-outline-primary mt-3">
-                  SEARCH FLIGHT
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 };
