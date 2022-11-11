@@ -1,8 +1,8 @@
 import React from "react";
 
-export const Destination = ({ handleDestinationChange, countries }) => {
+export const Destination = ({ handleDestinationChange, countries, data }) => {
   return (
-    <div class="col-md-6">
+    <div class="col-md-6 step-7">
       <label for="inputState" class="form-label">
         TO
       </label>
@@ -15,7 +15,12 @@ export const Destination = ({ handleDestinationChange, countries }) => {
           Choose...
         </option>
         {countries.map((country) => (
-          <option value={country.value}>{country.label}</option>
+          <option
+            value={country.value}
+            disabled={country.value === data.origin}
+          >
+            {country.label}
+          </option>
         ))}
       </select>
     </div>

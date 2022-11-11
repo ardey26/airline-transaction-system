@@ -2,7 +2,7 @@ import React from "react";
 
 export const Passenger = ({ handleNumChange, num }) => {
   return (
-    <div class="col-md-6">
+    <div class="col-md-6 step-8 passenger-step">
       <label for="inputState" class="form-label">
         PASSENGER
       </label>

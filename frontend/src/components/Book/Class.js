@@ -2,7 +2,7 @@ import React from "react";
 
 export const Class = ({ handleClassChange, classes }) => {
   return (
-    <div class="col-md-6">
+    <div class="col-md-6 step-8">
       <label for="inputState" class="form-label">
         CLASS
       </label>

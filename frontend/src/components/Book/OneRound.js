@@ -18,7 +18,7 @@ export const OneRound = ({
           checked={data.itinerary_type === "ONE_WAY"}
         />
         <label
-          class="btn btn-outline-primary btn-block btn-lg"
+          class="btn btn-outline-primary btn-block btn-lg step-4"
           for="success-outlined"
           onClick={handleOneWayChange}
         >
@@ -34,7 +34,7 @@ export const OneRound = ({
           checked={data.itinerary_type === "ROUND_TRIP"}
         />
         <label
-          class="btn btn-outline-primary btn-block btn-lg"
+          class="btn btn-outline-primary btn-block btn-lg step-5"
           for="danger-outlined"
           onClick={handleRoundTripChange}
         >

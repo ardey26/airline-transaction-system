@@ -6,7 +6,7 @@ const Calendar = ({ handleDepartureChange, handleArrivalChange, data }) => {
   if (data.itinerary_type === "ROUND_TRIP") {
     return (
       <>
-        <div class="col-md-3">
+        <div class="col-md-3 step-9">
           <MdDateRange size={20} /> DEPARTURE DATE:
           <DatePicker
             withPortal
@@ -16,7 +16,7 @@ const Calendar = ({ handleDepartureChange, handleArrivalChange, data }) => {
           />
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-3 step-10">
           <MdDateRange size={20} /> RETURN DATE:
           <DatePicker
             withPortal
@@ -29,7 +29,7 @@ const Calendar = ({ handleDepartureChange, handleArrivalChange, data }) => {
     );
   }
   return (
-    <div class="col-md-6">
+    <div class="col-md-6 step-9">
       <MdDateRange size={20} /> DEPARTURE DATE:
       <DatePicker
         withPortal

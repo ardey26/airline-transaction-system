@@ -2,7 +2,7 @@ import React from "react";
 
 export const Origin = ({ handleOriginChange, countries }) => {
   return (
-    <div class="col-md-6">
+    <div class="col-md-6 step-6">
       <label for="inputState" class="form-label">
         FROM
       </label>

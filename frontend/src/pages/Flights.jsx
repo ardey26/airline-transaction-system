@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import "intro.js/introjs.css";
+import { Steps, Hints } from "intro.js-react";
 
+const airports = require("../mock_datasets/airports.json");
 const Flights = ({ response }) => {
+  const itinerary = response.itinerary_type;
   const adults = response.num;
   const origin = response.origin;
   const destination = response.destination;
@@ -9,75 +12,133 @@ const Flights = ({ response }) => {
   const cabinClass = response.class;
   const arrival = response.arrival;
 
-  const API_KEY = "810ac4160fmsha95cd7639eeb9a5p19b13cjsna893908ac7a2";
-  const API_HOST = "priceline-com-provider.p.rapidapi.com";
-  const url = "https://priceline-com-provider.p.rapidapi.com/v1/flights/search";
-
-  const options = {
-    method: "GET",
-    url: url,
-    params: {
-      itinerary_type: "ONE_WAY",
-      class_type: cabinClass,
-      location_arrival: destination,
-      date_departure: departure,
-      location_departure: origin,
-      sort_order: "PRICE",
-      number_of_passengers: adults,
-      // date_departure_return: arrival === "" ? arrival : null,
-    },
-    headers: {
-      "X-RapidAPI-Key": API_KEY,
-      "X-RapidAPI-Host": API_HOST,
-    },
-  };
-
-  // const [results, setResults] = useState([]);
-  const results = axios.request(options).then((res) => {
-    console.log(res.data);
+  const destination_countries = airports.filter((airport) => {
+    return airport.country == response.destination;
   });
-  // axios
-  //   .request(options)
-  //   .then(function (response) {
-  //     const { filteredTripSummary } = response.data;
 
-  //     if (!filteredTripSummary) {
-  //       return console.log("NO RESULTS");
-  //     }
+  const origin_countries = airports.filter((airport) => {
+    return airport.country == response.origin;
+  });
 
-  //     const num_of_results = 10;
-  //     const { airport, airline, carrier } = filteredTripSummary;
+  const min_results = Math.min(
+    destination_countries.length,
+    origin_countries.length
+  );
+  const num_results = Math.floor(Math.random() * 10) + 1;
 
-  //     const max_results =
-  //       num_of_results > airline.length ? airline.length : num_of_results;
+  let results = [];
 
-  //     for (let i = 0; i < max_results; i++) {
-  //       let result_obj = {};
-  //       const { origin, destination } = airport[0];
-  //       const { amount, currency } = airline[i].lowestTotalFare;
-  //       const { code } = airline[i];
+  for (let i = 0; i <= num_results; i++) {
+    let results_obj = {};
+    results_obj.destination =
+      destination_countries[
+        Math.floor(Math.random() * destination_countries.length)
+      ];
 
-  //       const carrier_code = carrier[i].code;
+    results_obj.origin =
+      origin_countries[Math.floor(Math.random() * origin_countries.length)];
 
-  //       result_obj = {
-  //         origin: origin,
-  //         destination: destination,
-  //         amount: amount,
-  //         currency: currency,
-  //         airline_code: code,
-  //         carrier_code: carrier_code,
-  //       };
+    results_obj.price =
+      Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000;
 
-  //       setResults([...results, result_obj]);
-  //     }
+    results.push(results_obj);
+  }
+  const steps = [
+    {
+      element: ".step-3-1",
+      intro:
+        "These results are based off of your preferences at one point in time",
+      position: "right",
+      tooltipClass: "myTooltipClass",
+      highlightClass: "myHighlightClass",
+    },
+    {
+      element: ".step-3-2",
+      intro:
+        "This panel gives information about the origin and destination with cities",
+      position: "right",
+      tooltipClass: "myTooltipClass",
+      highlightClass: "myHighlightClass",
+    },
+    {
+      element: ".step-3-3",
+      intro: "This primarily gives you the price",
+      position: "right",
+      tooltipClass: "myTooltipClass",
+      highlightClass: "myHighlightClass",
+    },
+    {
+      element: ".step-3-4",
+      intro: "Try to click this one to know more about the listing.",
+      position: "right",
+      tooltipClass: "myTooltipClass",
+      highlightClass: "myHighlightClass",
+    },
+  ];
 
-  //     console.log(results);
-  //     console.log(filteredTripSummary);
-  //   })
-  //   .catch(function (error) {
-  //     console.error(error);
-  //   });
-  return <div> </div>;
+  return (
+    <div className="mb-3 step-3-1">
+      <Steps enabled={true} steps={steps} initialStep={0} />
+      <div className="display-1 mb-3">
+        {origin} to {destination}
+      </div>
+      {results.map((result, k) => {
+        if (itinerary === "ONE_WAY") {
+          return (
+            <p>
+              <div class="card w-100">
+                <h1 class="card-title step-3-2">
+                  Flight {k}:{" "}
+                  {result.origin.city == "Nan"
+                    ? null
+                    : result.origin.city + ","}{" "}
+                  {result.origin.country} to{" "}
+                  {result.destination.city == "Nan"
+                    ? null
+                    : result.destination.city + ", "}
+                  {result.destination.country}
+                </h1>
+                <div class="card-body">
+                  <p class="card-text display-6 step-3-3">
+                    Price: {result.price}
+                  </p>
+                  <a href="#" class="btn btn-primary step-3-4">
+                    Know more
+                  </a>
+                </div>
+              </div>
+            </p>
+          );
+        } else {
+          return (
+            <p>
+              <div class="card w-100">
+                <h1 class="card-title align-items-left step-3-2">
+                  Flight {k}:{" "}
+                  {result.origin.city == "Nan"
+                    ? null
+                    : result.origin.city + ","}{" "}
+                  {result.origin.country} to{" "}
+                  {result.destination.city == "Nan"
+                    ? null
+                    : result.destination.city + ", "}
+                  {result.destination.country}
+                </h1>
+                <div class="card-body">
+                  <p class="card-text display-6 step-3-3">
+                    Price: {result.price}
+                  </p>
+                  <a href="#" class="btn btn-primary step-3-4">
+                    Know more
+                  </a>
+                </div>
+              </div>
+            </p>
+          );
+        }
+      })}{" "}
+    </div>
+  );
 };
 
 export default Flights;
